@@ -1,5 +1,8 @@
 var jsPsych = initJsPsych();
 
+var pid = new URLSearchParams(window.location.search).get("pid");
+jsPsych.data.addProperties({ parent_run_id: pid });
+
 var timeline = [];
 
 // --- 1. FUNCIÓN AYUDANTE (No la borres, dibuja las preguntas automáticamente) ---
