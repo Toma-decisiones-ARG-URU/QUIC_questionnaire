@@ -4,17 +4,25 @@ var pid = new URLSearchParams(window.location.search).get("pid");
 jsPsych.data.addProperties({ parent_run_id: pid });
 
 var timeline = [];
+ 
+//////// QUIC QUESTIONNAIRE  /////////
 
 // --- 1. HELPER FUNCTION FOR QUIC QUESTIONS ---
 function generarPreguntas(listaPreguntas, numeroInicio) {
-  let html = '<div style="text-align: left; max-width: 750px; margin: auto;">';
+  let html = '<div style="text-align: left; max-width: 900px; margin: auto;">';
   listaPreguntas.forEach((pregunta, index) => {
     let num = numeroInicio + index;
     html += `
-      <div style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
-        <p><strong>${num}.</strong> ${pregunta}</p>
-        <label style="margin-right: 20px;"><input type="radio" name="quic_${num}" value="1" required> Sí</label>
-        <label><input type="radio" name="quic_${num}" value="0" required> No</label>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+        <div style="flex: 1; padding-right: 20px;">
+          <!-- Ajustá el font-size de la pregunta aquí -->
+          <p style="margin: 0; font-size: 14px;"><strong>${num}.</strong> ${pregunta}</p>
+        </div>
+        <div style="white-space: nowrap;">
+          <!-- Ajustá el font-size de las opciones aquí -->
+          <label style="margin-right: 20px; font-size: 15px;"><input type="radio" name="quic_${num}" value="1" required> Sí</label>
+          <label style="font-size: 15px;"><input type="radio" name="quic_${num}" value="0" required> No</label>
+        </div>
       </div>
     `;
   });
@@ -26,7 +34,7 @@ function generarPreguntas(listaPreguntas, numeroInicio) {
 var quic_intro = {
   type: jsPsychSurveyHtmlForm,
   preamble: `
-    <div style="text-align: left; max-width: 750px; margin: 0 auto 30px auto;">
+    <div style="text-align: left; max-width: 900px; margin: 0 auto 30px auto;">
       <h3>Cuestionario sobre experiencias en la niñez</h3>
       <p>Este es un conjunto de preguntas sobre sus experiencias en la niñez. Cuando decimos padres,
        nos referimos a cualquier persona que desempeñe ese papel en su vida (por ejemplo,
@@ -59,7 +67,7 @@ var preguntas_seccion1 = [
 var quic_seccion1 = {
   type: jsPsychSurveyHtmlForm,
   preamble: `
-    <div style="text-align: left; max-width: 750px; margin: 0 auto 30px auto;">
+    <div style="text-align: left; max-width: 900px; margin: 0 auto 30px auto;">
       <p>Primero, vamos a preguntarle sobre una parte específica de su niñez, que es cuando usted era menor de 12 años de edad. Estas respuestas deben ser basadas en sus propios recuerdos antes de los 12 años de edad, no en cosas que usted aprendió de sus padres o de otras personas.</p>
       <p><strong>Por favor responda a estas preguntas basándose en sus experiencias cotidianas (típicas) o promedio.</strong></p>
     </div>
@@ -96,7 +104,7 @@ var preguntas_seccion2 = [
 var quic_seccion2 = {
   type: jsPsychSurveyHtmlForm,
   preamble: `
-    <div style="text-align: left; max-width: 750px; margin: 0 auto 30px auto;">
+    <div style="text-align: left; max-width: 900px; margin: 0 auto 30px auto;">
       <p>Ahora le vamos a preguntar sobre sus experiencias desde su nacimiento a la edad de 18 años (o toda su vida, si usted es menor de 18 años de edad). Nuevamente, esto debe de basarse en sus propios recuerdos antes de los 18 años, no en cosas que usted aprendió de sus padres o de otras personas.</p>
       <p><strong>Por favor responda a estas preguntas basándose en sus experiencias cotidianas (típicas) o experiencias promedio.</strong></p>
     </div>
@@ -117,7 +125,7 @@ var preguntas_seccion3 = [
 var quic_seccion3 = {
   type: jsPsychSurveyHtmlForm,
   preamble: `
-    <div style="text-align: left; max-width: 750px; margin: 0 auto 30px auto;">
+    <div style="text-align: left; max-width: 900px; margin: 0 auto 30px auto;">
       <p>Para el siguiente conjunto de preguntas, le estamos preguntando si esto es cierto para al menos uno de sus padres.</p>
       <p><strong>Por favor responda a estas preguntas basándose en sus experiencias cotidianas (típicas) o promedio.</strong></p>
     </div>
@@ -136,7 +144,7 @@ var preguntas_seccion4 = [
 var quic_seccion4 = {
   type: jsPsychSurveyHtmlForm,
   preamble: `
-    <div style="text-align: left; max-width: 750px; margin: 0 auto 30px auto;">
+    <div style="text-align: left; max-width: 900px; margin: 0 auto 30px auto;">
       <p>Para el siguiente conjunto de preguntas, le estamos preguntando sobre su hogar. Si usted vivió en más de un hogar, por favor responda sobre el hogar en el cuál usted pasó la mayor parte del tiempo.</p>
       <p><strong>Por favor responda estas preguntas basándose en sus experiencias cotidianas (típicas) o promedio.</strong></p>
     </div>
@@ -145,16 +153,10 @@ var quic_seccion4 = {
   button_label: 'Finalizar'
 };
 
-// Define the response scale 
-var ius_scale = [
-  "1<br>Nada característico de mí", 
-  "2<br>Poco característico de mí", 
-  "3<br>Algo característico de mí", 
-  "4<br>Bastante característico de mí", 
-  "5<br>Totalmente característico de mí"
-];
 
-// List of prompts
+//////// IUS-9 QUESTIONNAIRE  /////////
+
+// --- 1. List of prompts ---
 var ius_prompts = [
   "1. Los imprevistos me molestan mucho.",
   "2. Es frustrante para mí no tener toda la información que necesito.",
@@ -167,17 +169,48 @@ var ius_prompts = [
   "9. La más mínima duda me puede impedir actuar."
 ];
 
+
+// --- 2. START SCREEN: INSTRUCTIONS AND ASPECT RATIO ---
+var ius_intro = {
+  type: jsPsychSurveyHtmlForm,
+  preamble: `
+    <div style="text-align: left; max-width: 900px; margin: 0 auto 30px auto;">
+      <h3>Cuestionario sobre incertidumbre</h3>
+      <p>A continuación encontrarás una serie de frases que describen cómo las personas pueden reaccionar ante situaciones inciertas.</p>
+    </div>
+  `,
+  html: `
+    <div style="text-align: left; max-width: 750px; margin: auto; margin-bottom: 30px;">
+    <!--<p><strong>Por favor escriba la relación de estas personas hacia usted:</strong></p> -->
+      <!-- <input type="text" name="quic_relacion" style="width: 100%; padding: 8px;" required> -->
+    </div>
+  `,
+  button_label: 'Continuar'
+};
+
 // Build the custom HTML table
 var ius_html = `
 <style>
-  .matrix-table { width: 100%; max-width: 950px; margin: 0 auto 30px auto; border-collapse: collapse; text-align: center; }
-  .matrix-table th { padding: 10px; border-bottom: 2px solid #000; font-weight: normal; vertical-align: bottom; }
+  .matrix-table { width: 100%; max-width: 900px; margin: 0 auto 30px auto; border-collapse: collapse; text-align: center; font-size: 15px; }
+  
+  /* Added sticky positioning, white background, and z-index to the header */
+  .matrix-table th { 
+    padding: 10px; 
+    border-bottom: 2px solid #000; 
+    font-weight: normal; 
+    vertical-align: bottom; 
+    position: sticky; 
+    top: 0; 
+    background-color: Gainsboro; 
+    z-index: 1; 
+    line-height: 1.2;
+  }
+  
   .matrix-table td { padding: 15px 10px; border-bottom: 1px dotted #888; }
-  .matrix-prompt { text-align: left; width: 45%; padding-right: 20px; }
+  .matrix-prompt { text-align: left; width: 45%; padding-right: 20px; line-height: 1.2; }
   .matrix-table input[type="radio"] { transform: scale(1.2); cursor: pointer; }
 </style>
-<div style="max-width: 950px; margin: 0 auto; text-align: left;">
-  <h3>A continuación encontrarás una serie de frases que describen cómo las personas pueden reaccionar ante situaciones inciertas.</h3>
+<div style="max-width: 950px; margin: 0 auto; text-align: left; font-size: 15px;">
   <p style="margin-bottom: 25px;">Por favor, indicá en qué medida cada frase es característica de vos, utilizando la siguiente escala:</p>
 </div>
 <table class="matrix-table">
@@ -218,11 +251,12 @@ var ius_9_block = {
 
 
 timeline.push(
-  quic_intro, 
-  quic_seccion1, 
-  quic_seccion2, 
-  quic_seccion3, 
-  quic_seccion4,
+ // quic_intro, 
+ // quic_seccion1, 
+  //quic_seccion2, 
+  //quic_seccion3, 
+  //quic_seccion4,
+  ius_intro, 
   ius_9_block
   
 );
