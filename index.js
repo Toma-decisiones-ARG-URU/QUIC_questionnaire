@@ -5,7 +5,7 @@ jsPsych.data.addProperties({ parent_run_id: pid });
 
 var timeline = [];
 
-// --- 1. FUNCIÓN AYUDANTE (No la borres, dibuja las preguntas automáticamente) ---
+// --- 1. HELPER FUNCTION FOR QUIC QUESTIONS ---
 function generarPreguntas(listaPreguntas, numeroInicio) {
   let html = '<div style="text-align: left; max-width: 750px; margin: auto;">';
   listaPreguntas.forEach((pregunta, index) => {
@@ -22,7 +22,7 @@ function generarPreguntas(listaPreguntas, numeroInicio) {
   return html;
 }
 
-// --- 2. PANTALLA INICIAL: Instrucciones y Relación ---
+// --- 2. START SCREEN: INSTRUCTIONS AND ASPECT RATIO ---
 var quic_intro = {
   type: jsPsychSurveyHtmlForm,
   preamble: `
@@ -43,7 +43,7 @@ var quic_intro = {
   button_label: 'Continuar'
 };
 
-// --- 3. SECCIÓN 1: Menor de 12 años (Preguntas 1-9) ---
+// --- 3. SECTION 1: 12 yo or below (Questions 1-9) ---
 var preguntas_seccion1 = [
   "Tenía una rutina mañanera establecida en los días escolares (por ejemplo, normalmente hacía lo mismo todos los días para prepararme).",
   "Muchas veces mis padres llegaban tarde a recogerme (por ejemplo, de la escuela, del cuidado después de escuela o de deportes).",
@@ -68,7 +68,7 @@ var quic_seccion1 = {
   button_label: 'Continuar'
 };
 
-// --- 4. SECCIÓN 2: Nacimiento a 18 años (Preguntas 10-30) ---
+// --- 4. SECTION 2: Nacimiento a 18 años (Preguntas 10-30) ---
 var preguntas_seccion2 = [
   "Al menos uno de mis padres estaba pendiente de mi progreso en la escuela.",
   "Al menos uno de mis padres tenía castigos que eran impredecibles.",
@@ -145,18 +145,86 @@ var quic_seccion4 = {
   button_label: 'Finalizar'
 };
 
-// No olvides agregar 'quic_sp_5_trial' a tu timeline al final del archivo:
-// timeline.push(demographics_trial, educational_level_trial, macarthur_scale_trial, quic_sp_5_trial);
+// Define the response scale 
+var ius_scale = [
+  "1<br>Nada característico de mí", 
+  "2<br>Poco característico de mí", 
+  "3<br>Algo característico de mí", 
+  "4<br>Bastante característico de mí", 
+  "5<br>Totalmente característico de mí"
+];
 
-// Add both to your timeline
-// timeline.push(age_exact_trial, age_group_trial);
+// List of prompts
+var ius_prompts = [
+  "1. Los imprevistos me molestan mucho.",
+  "2. Es frustrante para mí no tener toda la información que necesito.",
+  "3. Se debería prever todo para evitar las sorpresas.",
+  "4. Un pequeño imprevisto puede arruinarlo todo, incluso con la mejor de las planificaciones.",
+  "5. No soporto que me tomen por sorpresa.",
+  "6. Tendría que ser capaz de organizar todo de antemano.",
+  "7. Cuando llega el momento de actuar, la incertidumbre me paraliza.",
+  "8. Cuando estoy indeciso/a no puedo funcionar muy bien.",
+  "9. La más mínima duda me puede impedir actuar."
+];
+
+// Build the custom HTML table
+var ius_html = `
+<style>
+  .matrix-table { width: 100%; max-width: 950px; margin: 0 auto 30px auto; border-collapse: collapse; text-align: center; }
+  .matrix-table th { padding: 10px; border-bottom: 2px solid #000; font-weight: normal; vertical-align: bottom; }
+  .matrix-table td { padding: 15px 10px; border-bottom: 1px dotted #888; }
+  .matrix-prompt { text-align: left; width: 45%; padding-right: 20px; }
+  .matrix-table input[type="radio"] { transform: scale(1.2); cursor: pointer; }
+</style>
+<div style="max-width: 950px; margin: 0 auto; text-align: left;">
+  <h3>A continuación encontrarás una serie de frases que describen cómo las personas pueden reaccionar ante situaciones inciertas.</h3>
+  <p style="margin-bottom: 25px;">Por favor, indicá en qué medida cada frase es característica de vos, utilizando la siguiente escala:</p>
+</div>
+<table class="matrix-table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Nada característico<br>de mí<br>(1)</th>
+      <th>Poco característico<br>de mí<br>(2)</th>
+      <th>Algo característico<br>de mí<br>(3)</th>
+      <th>Bastante característico<br>de mí<br>(4)</th>
+      <th>Totalmente característico<br>de mí<br>(5)</th>
+    </tr>
+  </thead>
+  <tbody>
+`;
+
+// Loop to generate rows for each question
+for (var i = 0; i < ius_prompts.length; i++) {
+  ius_html += `
+    <tr>
+      <td class="matrix-prompt">${ius_prompts[i]}</td>
+      <td><input type="radio" name="IUS_${i+1}" value="1" required></td>
+      <td><input type="radio" name="IUS_${i+1}" value="2" required></td>
+      <td><input type="radio" name="IUS_${i+1}" value="3" required></td>
+      <td><input type="radio" name="IUS_${i+1}" value="4" required></td>
+      <td><input type="radio" name="IUS_${i+1}" value="5" required></td>
+    </tr>
+  `;
+}
+ius_html += `</tbody></table>`;
+
+// Configure the questionnaire block
+var ius_9_block = {
+  type: jsPsychSurveyHtmlForm,
+  html: ius_html,
+  button_label: 'Continuar'
+};
+
 
 timeline.push(
   quic_intro, 
   quic_seccion1, 
   quic_seccion2, 
   quic_seccion3, 
-  quic_seccion4
+  quic_seccion4,
+  ius_9_block
+  
 );
 
 jsPsych.run(timeline);
