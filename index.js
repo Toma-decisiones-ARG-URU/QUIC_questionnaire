@@ -249,13 +249,23 @@ var ius_9_block = {
   button_label: 'Continuar'
 };
 
+var jsPsych = initJsPsych({
+  on_finish: function() {
+    // Disable the browser's leave site warning
+    window.onbeforeunload = null;
+    
+    // Redirect to the next task
+    window.location.href = "https://mfypbidsur.cognition.run/?pid=" + encodeURIComponent(RUN_ID);
+  }
+});
+
 
 timeline.push(
- // quic_intro, 
- // quic_seccion1, 
-  //quic_seccion2, 
-  //quic_seccion3, 
-  //quic_seccion4,
+    quic_intro, 
+  quic_seccion1, 
+  quic_seccion2, 
+  quic_seccion3, 
+  quic_seccion4,
   ius_intro, 
   ius_9_block
   
